@@ -61,7 +61,16 @@ class MusicController extends Controller
       $music->artist_id = $request->artist_id;
       $music->audio = $request->audio_paths??[];
       $music->status = $request->status;
-     $music->type = $request->type;
+      $music->type = $request->type;
+
+
+
+
+      if($request->hasFile('audio_paths')){
+        $path  = $request->file('audio_paths')->store('/music' , 'public');
+        $music->audio = $path;
+      }
+
 
         if($music->save()){
             if($type == 'music'){
@@ -123,8 +132,13 @@ class MusicController extends Controller
         $music->name = $request->title;
         $music->category_id = $request->category_id;
         $music->artist_id = $request->artist_id;
-        $music->audio = $request->audio_paths ?? [];
+        $music->audio = $request->audio ?? [];
         $music->status = $request->status;
+
+        if($request->hasFile('audio')){
+            $path  = $request->file('audio')->store('/music' , 'public');
+            $music->audio = $path;
+        }
         // dd($music->save());
         if($music->save()){
             return redirect(route('music.index'))->with('success', 'Music Has been Updated');

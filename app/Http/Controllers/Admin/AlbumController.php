@@ -16,9 +16,12 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        $artist = Artist::get();
-        $album = Album::with('artist')->get();
-        return view('content.album.index', compact('album', 'artist'));
+         $artist = Artist::get();
+         $albums = Album::with('artist')->get();
+
+
+        //  dd($albums);
+       return view('content.album.index' , compact('albums' , 'artist'));
     }
 
     /**
@@ -39,6 +42,8 @@ class AlbumController extends Controller
      */
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $request->validate([
             'artist_id' => 'required',
         ]);
@@ -46,13 +51,34 @@ class AlbumController extends Controller
         $album  = new Album();
         $album->artist_id = $request->artist_id;
         $album->title = $request->title;
-        // $album->album = $request->album??[];
-        $album->image = $request->image ?? '';
+        $album->album = $request->album;
+        $album->image = $request->image??'';
         $album->status = $request->status;
 
-        if ($album->save()) {
-            return redirect()->route('album.index')->with('success', 'Album Created Successfully');
-        } else {
+        $images = [];
+        if($request->hasFile('image')){
+            $path  = $request->file('image')->store('/images/album_image/' , 'public');
+            foreach($request->file('image') as $value) {
+                $path  = $value->store('/images/album/' , 'public');
+                $images[] = $path;
+            }
+          }
+
+
+          $album->image = $images;
+          $albumArray = [];
+          if($request->hasFile('album')){
+            foreach($request->file('album') as $value) {
+                $path  = $value->store('/images/album/' , 'public');
+                $albumArray[] = $path;
+            }
+                // dd(implode(',',$album));
+                $album->album = $albumArray;
+          }
+
+        if($album->save()){
+            return redirect()->route('album.index')->with('success' , 'Album Created Successfully');
+        }else{
             return redirect()->route('album.index')->with('error', 'Album not created');
         }
     }

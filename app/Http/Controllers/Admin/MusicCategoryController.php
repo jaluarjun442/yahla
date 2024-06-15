@@ -36,13 +36,15 @@ class MusicCategoryController extends Controller
      */
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $request->validate([
             'music_category' => 'required'
         ]);
 
         $model = new MusicCategory();
         $model->name = $request->music_category;
-       $model->icon = $request->icon??null;
+        $model->icon = $request->icon??null;
         if($model->save()){
             return redirect()->route('music-category.index')->with('success', 'Music Category Has been inserted');
         }else{
@@ -82,7 +84,7 @@ class MusicCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-   
+
         $music = MusicCategory::findorFail($id);
          $music->name = $request->music_category;
          $music->icon = $request->icon??null;
@@ -127,12 +129,12 @@ class MusicCategoryController extends Controller
             if (file_exists($path)) {
                 unlink($path);
             }
-    
+
             // Remove the image filename from the model attribute
             $music->icon = null;
             $music->save();
         }
-        
+
         return [
             'status' => true
         ];

@@ -1387,7 +1387,7 @@ $configData = Helper::appClasses();
 
 
           <li class="menu-item {{ Request::is('music-category') ? 'active' : '' }}">
-            <a href="{{url('video-clips')}}" class="menu-link">
+            <a href="{{url('music-category')}}" class="menu-link">
               <div>Music Category</div>
             </a>
 

@@ -125,8 +125,8 @@ https://cdn.jsdelivr.net/npm/dropify@0.2.2/dist/css/dropify.min.css
 
         <div class="">
             @can('music.create')
-                <button class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#createcategoryModal">{{ $type == 'music' ? 'Add Category' : 'Add Song' }}</button>
+                {{-- <button class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#createmusiccategoryModal">{{ $type == 'music' ? 'Add Category' : 'Add Song' }}</button> --}}
                 <button class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#createmusicModal">{{ $type == 'music' ? 'Add Music' : 'Add Song' }}</button>
             @endcan
@@ -154,8 +154,11 @@ https://cdn.jsdelivr.net/npm/dropify@0.2.2/dist/css/dropify.min.css
                     <tr>
                         <td>{{++$key}}</td>
                         <td>
-                            <img height="50px" width="50%" src="{{ asset('storage/'.implode(',',$value->audio)) }}"
-                                alt="">
+                            @if(gettype($value->audio) != 'array')
+                                <i class="menu-icon tf-icons bx bx-music"></i>
+                            @else
+                                No Uploaded
+                            @endif
                         </td>
 
                         <td>
@@ -173,11 +176,11 @@ https://cdn.jsdelivr.net/npm/dropify@0.2.2/dist/css/dropify.min.css
                         </td>
                         <td>
 
-                            <a href="{{ url("music/$value[_id]") }}" class="btn btn-primary" data-bs-placement="top"
-                                data-bs-html="true" data-bs-original-title="Edit">View</a>
+                            {{-- <a href="{{ url("music/$value[_id]") }}" class="btn btn-primary" data-bs-placement="top"
+                                data-bs-html="true" data-bs-original-title="Edit">View</a> --}}
 
                                 <a href="{{ route('music.edit',$value['_id']) }}" class="btn btn-primary" data-bs-placement="top"
-                                data-bs-html="true" data-bs-original-title="Edit">edit</a>
+                                data-bs-html="true" data-bs-original-title="Edit">Edit</a>
                             <!--<a  href="{{ url('musics/1') }}" class="btn btn-primary" data-bs-placement="top" data-bs-html="true" data-bs-original-title="Edit">Edit</a>-->
                             {{-- <button class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#editmusicModal">{{ $type == 'music' ? 'Edit' : 'Add Song' }}</button> --}}
@@ -215,14 +218,6 @@ https://cdn.jsdelivr.net/npm/dropify@0.2.2/dist/css/dropify.min.css
         saveBtnType="submit" saveBtnForm="createForm" size="md">
 
         @include('content.include.music.createForm')
-    </x-modal>
-
-
-    <x-modal id="createcategoryModal" title="{{ $type == 'music' ? 'Create Category' : 'Create Songs' }}"
-        saveBtnText="Create" saveBtnType="submit" saveBtnForm="createForm" size="md">
-
-        {{-- @include('content.include.music.createFormCat') --}}
-        @include('content.include.music_category.createForm')
     </x-modal>
 
 
@@ -313,6 +308,11 @@ https://cdn.jsdelivr.net/npm/dropify@0.2.2/dist/css/dropify.min.css
     <script>
         $('.dropify').dropify();
     </script>
+
+<x-modal id="createmusiccategoryModal" title="Create Music Category" saveBtnText="Create" saveBtnType="submit"
+saveBtnForm="createForm" size="md">
+@include('content.include.music_category.createForm')
+</x-modal>
     <script>
         function drpzone_init() {
 
