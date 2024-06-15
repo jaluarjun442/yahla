@@ -16,7 +16,7 @@ class VideoClipController extends Controller
      */
     public function index(Request $request)
    {
-        $video  = VideoClip::with('music_category')->get();
+        $video  = VideoClip::with('music_category','artist')->get();
         $music_category  = MusicCategory::get();
         $artists = Artist::get();
         return view('content.video_clips.index' , compact('video' , 'music_category' , 'artists'));
@@ -40,13 +40,13 @@ class VideoClipController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'category_id'=>'required',
-          ]); 
+        // $request->validate([
+        //     'category_id'=>'required',
+        //   ]); 
 
     //   $music_implode = implode('' , $request->audio_paths);
       $video = new VideoClip();
-      $video->category_id = $request->category_id;
+    //   $video->category_id = $request->category_id;
       $video->artist_id = $request->artist_id;
       $video->video = $request->video_paths??[];
       $video->status = $request->status;
